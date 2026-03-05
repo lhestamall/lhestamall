@@ -13,8 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lhesta Mall | Artisanal Essentials",
-  description: "Curated collection of artisanal essentials and modern lifestyle pieces.",
+  title: "Lhesta Mall",
+  description: "Home of all your lifetyle deals.",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 import { CartSheet } from "@/components/cart-sheet";
