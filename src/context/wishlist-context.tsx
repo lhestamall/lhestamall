@@ -16,6 +16,7 @@ type WishlistItem = {
     is_pre_order?: boolean
     pre_order_release_date?: string | null
     stock_quantity: number
+    category?: string | null
   }
 }
 
@@ -48,12 +49,12 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       .select(`
         id,
         product_id,
-        product:products(id, name, price, image_url, image_urls, is_pre_order, pre_order_release_date, stock_quantity)
+        product:products(id, name, price, image_url, image_urls, is_pre_order, pre_order_release_date, stock_quantity, category)
       `)
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
 
-    if (!error && data) setItems((data as any) || [])
+    if (!error && data) setItems((data as unknown) as WishlistItem[] || [])
     setIsLoading(false)
   }, [supabase])
 

@@ -97,7 +97,10 @@ export async function getCategoriesForGroup(
         .from('order_items')
         .select('product_id, quantity, orders!inner(created_at)')
       if (!orderItems?.length) return getFeaturedCategories(supabase, limit)
-      const filtered = orderItems.filter((o: { orders?: { created_at?: string } }) => (o.orders?.created_at ?? '') >= sinceIso)
+      const filtered = orderItems.filter((o: { orders?: { created_at?: string } | Array<{ created_at?: string }> }) => {
+        const created = Array.isArray(o.orders) ? o.orders[0]?.created_at : o.orders?.created_at
+        return (created ?? '') >= sinceIso
+      })
       if (!filtered.length) return getFeaturedCategories(supabase, limit)
       const qtyByProduct: Record<number, number> = {}
       for (const o of filtered) {

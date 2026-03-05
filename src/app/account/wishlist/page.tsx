@@ -74,7 +74,7 @@ export default function WishlistPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <span className="text-label text-(--color-text-muted) uppercase tracking-wide block">
-                        {item.product.category || 'Product'}
+                        {item.product.category ?? 'Product'}
                       </span>
                       <Link
                         href={`/shop/${item.product_id}`}

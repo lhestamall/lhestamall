@@ -15,6 +15,22 @@ type OrderRow = {
     order_items?: Array<{ id: string; quantity: number; price_at_purchase: number; product: { id: number; name: string } | null }>
 }
 
+/** Supabase can return nested product as object or array; normalize to OrderRow[]. */
+function normalizeOrders(rows: unknown): OrderRow[] | null {
+    if (!Array.isArray(rows)) return null
+    return rows.map((order: any) => ({
+        ...order,
+        order_items: Array.isArray(order?.order_items)
+            ? order.order_items.map((item: any) => ({
+                id: item.id,
+                quantity: item.quantity,
+                price_at_purchase: item.price_at_purchase,
+                product: Array.isArray(item.product) ? (item.product[0] ?? null) : item.product ?? null,
+            }))
+            : undefined,
+    })) as OrderRow[]
+}
+
 function filterOrdersBySearch(orders: OrderRow[] | null, q: string): OrderRow[] {
     if (!orders || orders.length === 0) return []
     if (!q || q.trim() === '') return orders
@@ -68,7 +84,8 @@ export default async function AdminOrdersPage(props: { searchParams: Promise<{ q
         )
     }
 
-    const filteredOrders = filterOrdersBySearch(orders as OrderRow[] | null, q)
+    const normalizedOrders = normalizeOrders(orders)
+    const filteredOrders = filterOrdersBySearch(normalizedOrders, q)
 
     const getStatusIcon = (status: string) => {
         switch (status) {
@@ -164,7 +181,7 @@ export default async function AdminOrdersPage(props: { searchParams: Promise<{ q
                                         </td>
                                         <td className="px-6 py-4 text-gray-600 dark:text-gray-400 max-w-[200px]">
                                             {(() => {
-                                                const items = (order as OrderRow).order_items ?? []
+                                                const items = order.order_items ?? []
                                                 const names = items.map((i) => i.product?.name).filter(Boolean) as string[]
                                                 return names.length ? (
                                                     <span className="line-clamp-2" title={names.join(', ')}>{names.join(', ')}</span>

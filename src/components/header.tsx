@@ -55,7 +55,7 @@ export function Header() {
         .filter(Boolean)
         .slice(0, 3)
       const formattedSuggestions: { id?: number; name: string; type: 'product' | 'category' }[] = [
-        ...uniqueCategories.map((cat) => ({ name: cat as string, type: 'category' })),
+        ...uniqueCategories.map((cat) => ({ name: cat as string, type: 'category' as const })),
         ...(products?.map((p) => ({ id: p.id, name: p.name, type: 'product' as const })) || []),
       ]
       setSuggestions(formattedSuggestions)
