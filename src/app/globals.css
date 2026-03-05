@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  /* Softer corners for buttons and elements */
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+}
+
+/* Design system – 60-30-10 rule, three colors only.
+ * Inspired by Apple, Zara, ASOS: soft neutrals, product-first, one accent.
+ * 60% dominant (bg), 30% secondary (surfaces), 10% accent (header, links, CTAs). */
+
+:root {
+  /* Three-color palette – clean minimal */
+  --color-dominant: #f0f0f0;   /* 60% – slightly gray background */
+  --color-secondary: #ffffff; /* 30% – pure white cards/surfaces */
+  --color-accent: #171717;     /* 10% – soft black header, links, CTAs (Zara/Apple style) */
+
+  /* Mapped tokens */
+  --color-bg: var(--color-dominant);
+  --color-surface: var(--color-secondary);
+  --color-surface-hover: #e8e8e8;
+  --color-border: #e0e0e0;
+  --color-text: #171717;
+  --color-text-muted: #737373;
+  --color-link: var(--color-accent);
+  --color-link-hover: #404040;
+  --color-header-bg: var(--color-accent);
+  --color-header-text: #ffffff;
+  --color-cta-bg: var(--color-accent);
+  --color-cta-text: #ffffff;
+  --color-success: #0d9488;
+  --color-warning: #b45309;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-label: 0.75rem;
+  --text-title-sm: 1.125rem;
+  --text-title: 1.25rem;
+  --text-heading: 1.5rem;
+  --text-section: 1.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark theme – same three roles, inverted */
+    --color-dominant: #0f0f0f;
+    --color-secondary: #171717;
+    --color-accent: #fafafa;
+
+    --color-bg: var(--color-dominant);
+    --color-surface: var(--color-secondary);
+    --color-surface-hover: #262626;
+    --color-border: #2a2a2a;
+    --color-text: #fafafa;
+    --color-text-muted: #a3a3a3;
+    --color-link: #a5b4fc;
+    --color-link-hover: #c7d2fe;
+    --color-header-bg: var(--color-secondary);
+    --color-header-text: var(--color-text);
+    --color-cta-bg: var(--color-accent);
+    --color-cta-text: #0a0a0a;
+    --color-success: #2dd4bf;
+    --color-warning: #fbbf24;
+  }
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  color: var(--color-text);
+  background: var(--color-bg);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.text-body { font-size: var(--text-body); line-height: 1.5; font-weight: 400; }
+.text-body-sm { font-size: var(--text-body-sm); line-height: 1.45; font-weight: 400; }
+.text-label { font-size: var(--text-label); line-height: 1.4; letter-spacing: 0.02em; }
+.text-title-sm { font-size: var(--text-title-sm); line-height: 1.35; font-weight: 600; }
+.text-title { font-size: var(--text-title); line-height: 1.3; font-weight: 600; }
+.text-heading { font-size: var(--text-heading); line-height: 1.25; font-weight: 700; }
+.text-section { font-size: var(--text-section); line-height: 1.3; font-weight: 700; }
+
+.ds-container {
+  width: 100%;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+@media (min-width: 640px) {
+  .ds-container { padding-left: var(--space-6); padding-right: var(--space-6); }
+}
+@media (min-width: 1024px) {
+  .ds-container { padding-left: var(--space-8); padding-right: var(--space-8); }
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 var(--space-5);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-cta-text);
+  background: var(--color-cta-bg);
+  border: none;
+  border-radius: var(--radius-md);
+  transition: opacity 0.15s;
+}
+.btn-primary:hover { opacity: 0.95; }
+.btn-primary:active { opacity: 0.9; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 var(--space-5);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-secondary:hover { background: var(--color-surface-hover); border-color: var(--color-text-muted); }
+
+.ds-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.ds-link { color: var(--color-link); text-decoration: none; }
+.ds-link:hover { color: var(--color-link-hover); text-decoration: underline; }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-in { animation-duration: 400ms; animation-fill-mode: forwards; }
+.fade-in { animation-name: fade-in; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Fading edges for horizontal pill scroll – set --pill-fade-color on parent to match section bg */
+.pill-scroll-fade {
+  position: relative;
+}
+.pill-scroll-fade::before,
+.pill-scroll-fade::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.5rem;
+  max-width: 48px;
+  pointer-events: none;
+  z-index: 1;
+}
+.pill-scroll-fade::before {
+  left: 0;
+  background: linear-gradient(to right, var(--pill-fade-color, var(--color-bg)), transparent);
+}
+.pill-scroll-fade::after {
+  right: 0;
+  background: linear-gradient(to left, var(--pill-fade-color, var(--color-bg)), transparent);
+}
+
+/* Narrow, light and gradual fade for product/category card rows */
+.pill-scroll-fade-soft::before,
+.pill-scroll-fade-soft::after {
+  width: 0.75rem;
+  max-width: 16px;
+  /* Light tint at edge fading smoothly to transparent – slight opacity boost */
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--pill-fade-color, var(--color-bg)) 62%, transparent) 0%,
+    transparent 100%
+  );
+}
+.pill-scroll-fade-soft::after {
+  background: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--pill-fade-color, var(--color-bg)) 62%, transparent) 0%,
+    transparent 100%
+  );
+}
+
+/* Product section: horizontal scroll and edge fade only on mobile */
+@media (min-width: 640px) {
+  .pill-scroll-fade-soft::before,
+  .pill-scroll-fade-soft::after {
+    display: none;
+  }
+}
