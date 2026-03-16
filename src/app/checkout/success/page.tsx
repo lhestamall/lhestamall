@@ -38,7 +38,7 @@ export default async function SuccessPage(props: {
                         href="/shop"
                         className="flex flex-col items-center justify-center p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900 transition-all group"
                     >
-                        <Logo className="w-8 h-8 mb-2 group-hover:scale-110 transition-transform" />
+                        <Logo className="h-12 w-auto mb-2 group-hover:scale-110 transition-transform" showTagline />
                         <span className="text-xs font-bold">Keep Shopping</span>
                     </Link>
                     <Link

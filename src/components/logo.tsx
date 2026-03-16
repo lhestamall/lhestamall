@@ -1,44 +1,33 @@
 import React from 'react'
+import Image from 'next/image'
 
-type LogoProps = { className?: string; /** Use when logo is on a dark bar (e.g. header) so the L and dot stay visible */ variant?: 'dark-bg' | 'light-bg' }
+type LogoProps = {
+  className?: string
+  /** Use when logo is on a dark bar (e.g. header) so tagline contrast is correct */
+  variant?: 'dark-bg' | 'light-bg'
+  /** Show "Shop smart. import better." in italics beneath the logo (styled to match reference: small, under curve, blended) */
+  showTagline?: boolean
+}
 
-export function Logo({ className = 'w-8 h-8', variant = 'light-bg' }: LogoProps) {
+export function Logo({ className = 'w-8 h-8', variant = 'light-bg', showTagline = false }: LogoProps) {
   return (
-    <svg
-      viewBox="0 0 100 100"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      {/* Bag shape – uses currentColor (e.g. white on header, dark on footer) */}
-      <path
-        d="M32 30H68C73 30 75 32 76 36L84 84C85 89 82 92 76 92H24C18 92 15 89 16 84L24 36C25 32 27 30 32 30Z"
-        fill="currentColor"
+    <span className="inline-flex flex-col items-start">
+      <Image
+        src="/logo.png"
+        alt="Lhesta Mall – Shop Smart. Import Better."
+        width={320}
+        height={128}
+        className={`object-contain object-left ${className}`}
+        priority
+        unoptimized
       />
-
-      {/* Handle */}
-      <path
-        d="M40 30V24C40 18 44 14 50 14C56 14 60 18 60 24V30"
-        stroke="currentColor"
-        strokeWidth="5"
-        strokeLinecap="round"
-      />
-
-      {/* L and dot – contrast with bag: on dark bar use header-bg, on light use same as text so they invert with the bag */}
-      <g transform="rotate(-10, 50, 60)">
-        <path
-          d="M40 45H48V70H62V78H40V45Z"
-          fill={variant === 'dark-bg' ? 'var(--color-header-bg)' : 'white'}
-          className={variant === 'light-bg' ? 'dark:fill-black' : ''}
-        />
-        <circle
-          cx="62"
-          cy="45"
-          r="4"
-          fill={variant === 'dark-bg' ? 'var(--color-header-bg)' : 'white'}
-          className={variant === 'light-bg' ? 'dark:fill-black' : ''}
-        />
-      </g>
-    </svg>
+      {showTagline && (
+        <span
+          className={`text-[7px] sm:text-[8px] italic -mt-2 leading-none whitespace-nowrap ml-[calc(20%+12px)] sm:ml-[calc(22%+12px)] scale-x-110 origin-left ${variant === 'dark-bg' ? 'text-(--color-header-text)/80' : 'text-(--color-text-muted)/90'}`}
+        >
+          Shop smart. import better.
+        </span>
+      )}
+    </span>
   )
 }

@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
-import { ChevronRight, ShieldCheck, Truck, Package, Mail } from 'lucide-react'
+import { ChevronRight, CreditCard, PiggyBank, Truck, Mail } from 'lucide-react'
 import { ProductImage } from '@/components/product-image'
 import { getProductImageUrl } from '@/lib/product'
 import { HOME_GROUPS } from '@/config/home-groups'
@@ -44,9 +44,6 @@ function CategoryCard({ category, heroProduct }: CategoryHero) {
 export default async function Home() {
   const supabase = await createClient()
 
-  const { data: categoryData } = await supabase.from('products').select('category')
-  const allCategories = Array.from(new Set(categoryData?.map((p) => p.category).filter(Boolean))) as string[]
-
   const rawSections = await Promise.all(
     HOME_GROUPS.map(async (group) => {
       const categories = await getCategoriesForGroup(supabase, group)
@@ -62,60 +59,67 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-(--color-bg) text-(--color-text)">
       <main className="flex-1">
-        <section className="bg-(--color-surface) py-5 sm:py-8" style={{ ['--pill-fade-color' as string]: 'var(--color-surface)' }}>
-          <div className="ds-container">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
-              <div>
-                <h1 className="text-heading text-(--color-text)">Shop by category</h1>
-                <p className="text-body-sm text-(--color-text-muted) mt-1" style={{ marginTop: 'var(--space-1)' }}>
-                  Browse our collection by category
+        {/* Hero: reference style – orange heading, Ghana subheading, CTA, right image */}
+        <section className="relative bg-(--color-surface) overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Cpath fill=\'%23000\' d=\'M50 0L100 50 50 100 0 50z\'/%3E%3C/svg%3E")', backgroundSize: '120px' }} aria-hidden />
+          <div className="ds-container relative py-10 sm:py-14 lg:py-16">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-(--color-hero-accent) leading-tight max-w-xl">
+                  Shop Smart. Import Better.
+                </h1>
+                <p className="mt-3 sm:mt-4 text-body sm:text-title-sm text-(--color-text) max-w-md">
+                  Quality Imports at Better Prices for Ghana 🇬🇭
                 </p>
+                <Link
+                  href="/shop"
+                  className="inline-flex items-center justify-center min-h-12 px-6 mt-6 rounded-sm bg-(--color-cta-bg) text-(--color-cta-text) text-body-sm font-semibold hover:opacity-95 transition-opacity"
+                >
+                  Explore Our Products
+                </Link>
               </div>
-              <Link href="/shop" className="ds-link inline-flex items-center text-title-sm font-semibold shrink-0">
-                View all products
-                <ChevronRight className="w-5 h-5 ml-1" style={{ width: '1.25rem', height: '1.25rem', marginLeft: 'var(--space-1)' }} aria-hidden />
-              </Link>
-            </div>
-
-            <div className="mt-4 sm:mt-6 pill-scroll-fade -mx-4 sm:-mx-6 lg:-mx-8" style={{ ['--pill-fade-color' as string]: 'var(--color-surface)' }}>
-              <div className="overflow-x-auto no-scrollbar px-4 sm:px-6 lg:px-8">
-                <div className="flex gap-2 w-max min-w-full pb-2" style={{ gap: 'var(--space-2)' }}>
-                  {allCategories.length > 0 ? (
-                    <>
-                      <Link
-                        href="/shop"
-                        className="shrink-0 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-body-sm font-medium bg-(--color-surface-hover) text-(--color-text) hover:bg-(--color-link) hover:text-(--color-cta-text) transition-colors"
-                      >
-                        All
-                      </Link>
-                      {allCategories.map((category) => (
-                        <Link
-                          key={category}
-                          href={`/shop?category=${encodeURIComponent(category)}`}
-                          className="shrink-0 inline-flex items-center rounded-full px-4 py-2 text-body-sm font-medium bg-(--color-surface-hover) text-(--color-text) hover:bg-(--color-link) hover:text-(--color-cta-text) transition-colors"
-                        >
-                          {category}
-                        </Link>
-                      ))}
-                    </>
-                  ) : (
-                    <Link
-                      href="/shop"
-                      className="shrink-0 inline-flex items-center rounded-full px-4 py-2 text-body-sm font-medium bg-(--color-surface-hover) text-(--color-text) hover:bg-(--color-link) hover:text-(--color-cta-text) transition-colors"
-                    >
-                      All products
-                    </Link>
-                  )}
+              <div className="relative aspect-4/3 max-w-lg mx-auto lg:max-w-none rounded-xl overflow-hidden bg-(--color-surface-hover)">
+                <div className="absolute inset-0 flex items-center justify-center text-(--color-text-muted) text-body-sm">
+                  <span className="text-center px-4">Quality imports for your lifestyle</span>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
+        {/* Trust cards: between hero and first section, floating on the line */}
+        <div className="relative z-10 -mt-10 sm:-mt-14 px-4 sm:px-6 lg:px-8">
+          <div className="ds-container">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+              <div className="bg-(--color-surface) rounded-xl p-5 sm:p-6 border border-(--color-border) shadow-lg">
+                <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-(--color-bg) text-(--color-link) mb-3">
+                  <CreditCard className="w-5 h-5" aria-hidden />
+                </div>
+                <h3 className="text-title-sm font-semibold text-(--color-text) mb-1.5">Secure Payments</h3>
+                <p className="text-body-sm text-(--color-text-muted)">Protected checkout and secure payment options for your peace of mind.</p>
+              </div>
+              <div className="bg-(--color-surface) rounded-xl p-5 sm:p-6 border border-(--color-border) shadow-lg">
+                <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-(--color-bg) text-(--color-link) mb-3">
+                  <PiggyBank className="w-5 h-5" aria-hidden />
+                </div>
+                <h3 className="text-title-sm font-semibold text-(--color-text) mb-1.5">Affordable Prices</h3>
+                <p className="text-body-sm text-(--color-text-muted)">Quality imports at better prices, tailored for Ghana.</p>
+              </div>
+              <div className="bg-(--color-surface) rounded-xl p-5 sm:p-6 border border-(--color-border) shadow-lg">
+                <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-(--color-bg) text-(--color-link) mb-3">
+                  <Truck className="w-5 h-5" aria-hidden />
+                </div>
+                <h3 className="text-title-sm font-semibold text-(--color-text) mb-1.5">Trusted Delivery</h3>
+                <p className="text-body-sm text-(--color-text-muted)">Reliable shipping and delivery so your orders arrive on time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {groupSections.map(({ group, heroes }, index) => (
             <section
               key={group.id}
-              className="ds-container py-6 sm:py-10"
+              className={`ds-container ${index === 0 ? 'pt-16 sm:pt-20' : ''} py-6 sm:py-10`}
             >
               <div className="flex items-end justify-between gap-4 mb-4 sm:mb-6">
                 <h2 className="text-section text-(--color-text)">{group.label}</h2>
@@ -162,40 +166,6 @@ export default async function Home() {
             </section>
         ))}
 
-        <section className="bg-(--color-surface) py-4 sm:py-6">
-          <div className="ds-container">
-            <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-              <li className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-10 h-10 rounded-md bg-(--color-bg)" style={{ width: '2.5rem', height: '2.5rem' }}>
-                  <ShieldCheck className="w-5 h-5 text-(--color-text-muted)" style={{ width: '1.25rem', height: '1.25rem' }} aria-hidden />
-                </span>
-                <div>
-                  <span className="text-body-sm font-semibold text-(--color-text)">Secure checkout</span>
-                  <p className="text-body-sm text-(--color-text-muted)">Protected payments</p>
-                </div>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-10 h-10 rounded-md bg-(--color-bg)" style={{ width: '2.5rem', height: '2.5rem' }}>
-                  <Truck className="w-5 h-5 text-(--color-text-muted)" style={{ width: '1.25rem', height: '1.25rem' }} aria-hidden />
-                </span>
-                <div>
-                  <span className="text-body-sm font-semibold text-(--color-text)">Fast delivery</span>
-                  <p className="text-body-sm text-(--color-text-muted)">2-day shipping</p>
-                </div>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-10 h-10 rounded-md bg-(--color-bg)" style={{ width: '2.5rem', height: '2.5rem' }}>
-                  <Package className="w-5 h-5 text-(--color-text-muted)" style={{ width: '1.25rem', height: '1.25rem' }} aria-hidden />
-                </span>
-                <div>
-                  <span className="text-body-sm font-semibold text-(--color-text)">Easy returns</span>
-                  <p className="text-body-sm text-(--color-text-muted)">Hassle-free</p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </section>
-
         <section className="ds-container py-6 sm:py-10">
           <div className="ds-card p-4 sm:p-6 max-w-xl">
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
@@ -209,7 +179,7 @@ export default async function Home() {
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 min-h-11 px-4 rounded-md bg-(--color-surface) text-(--color-text) placeholder:text-(--color-text-muted) focus:outline-none focus:ring-2 focus:ring-(--color-link) text-body-sm"
+                className="flex-1 min-h-11 px-4 rounded-sm bg-(--color-surface) text-(--color-text) placeholder:text-(--color-text-muted) focus:outline-none focus:ring-2 focus:ring-(--color-link) text-body-sm"
               />
               <button type="submit" className="btn-primary shrink-0">
                 Subscribe

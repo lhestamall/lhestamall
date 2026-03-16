@@ -36,7 +36,7 @@ export function AddToCartButton({ productId, variant = 'icon', disabled, quantit
             <button
                 onClick={handleAdd}
                 disabled={disabled || isAdding}
-                className="h-10 w-10 flex items-center justify-center rounded-md bg-(--color-cta-bg) text-(--color-cta-text) hover:opacity-90 active:scale-95 transition-all disabled:opacity-50"
+                className="h-10 w-10 flex items-center justify-center rounded-sm border-0 bg-(--color-cta-bg) text-(--color-cta-text) hover:opacity-90 active:scale-95 transition-all disabled:opacity-50"
             >
                 {isAdding ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -51,7 +51,7 @@ export function AddToCartButton({ productId, variant = 'icon', disabled, quantit
         <button
             onClick={handleAdd}
             disabled={disabled || isAdding}
-            className={`w-full min-h-11 inline-flex items-center justify-center gap-2 rounded-md bg-(--color-cta-bg) text-(--color-cta-text) text-body-sm font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed group ${className}`.trim()}
+            className={`w-full min-h-11 inline-flex items-center justify-center gap-2 rounded-sm border-0 bg-(--color-cta-bg) text-(--color-cta-text) text-body-sm font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed group ${className}`.trim()}
         >
             {isAdding ? (
                 <LoadingSpinner size="sm" className="text-current shrink-0" />

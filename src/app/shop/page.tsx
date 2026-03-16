@@ -22,9 +22,6 @@ export default async function ShopPage(props: {
 
   const supabase = await createClient()
 
-  const { data: categoryData } = await supabase.from('products').select('category')
-  const categories = Array.from(new Set(categoryData?.map((p) => p.category).filter(Boolean)))
-
   let query = supabase.from('products').select('*')
 
   switch (sortParam) {
@@ -60,9 +57,9 @@ export default async function ShopPage(props: {
     <div className="flex flex-col min-h-screen bg-(--color-bg) text-(--color-text)">
       <main className="flex-1">
         <div className="flex flex-col">
-        <section className="bg-(--color-surface) py-5 sm:py-8" style={{ ['--pill-fade-color' as string]: 'var(--color-surface)' }}>
+        <section className="bg-(--color-surface) py-5 sm:py-8">
           <div className="ds-container">
-            <div className="max-w-3xl mb-4 sm:mb-6">
+            <div className="max-w-3xl mb-2 sm:mb-3">
               <h1 className="text-heading text-(--color-text) mb-1 sm:mb-2" style={{ marginBottom: 'var(--space-1)' }}>
                 {queryParam ? `Search results for "${queryParam}"` : selectedCategory || 'All products'}
               </h1>
@@ -73,46 +70,6 @@ export default async function ShopPage(props: {
                     ? `${selectedCategory} – browse below.`
                     : 'Browse our full collection.'}
               </p>
-            </div>
-
-            <div className="mt-4 sm:mt-6 pill-scroll-fade -mx-4 sm:-mx-6 lg:-mx-8" style={{ ['--pill-fade-color' as string]: 'var(--color-surface)' }}>
-              <div className="overflow-x-auto no-scrollbar px-4 sm:px-6 lg:px-8">
-                <div className="flex gap-2 w-max min-w-full pb-2" style={{ gap: 'var(--space-2)' }}>
-                  <Link
-                    href={
-                    availability === 'all' && !queryParam && sortParam === 'newest' && !minPrice && !maxPrice
-                      ? '/shop'
-                      : `/shop?${new URLSearchParams({
-                          ...(availability !== 'all' && { availability }),
-                          ...(queryParam && { q: queryParam }),
-                          ...(sortParam !== 'newest' && { sort: sortParam }),
-                          ...(minPrice && { minPrice }),
-                          ...(maxPrice && { maxPrice }),
-                        }).toString()}`
-                    }
-                    className={`shrink-0 inline-flex items-center rounded-full px-4 py-2 text-body-sm font-medium transition-colors ${
-                      !selectedCategory
-                        ? 'bg-(--color-link) text-(--color-cta-text)'
-                        : 'bg-(--color-surface-hover) text-(--color-text) hover:bg-(--color-link) hover:text-(--color-cta-text)'
-                    }`}
-                  >
-                    All
-                  </Link>
-                  {categories.map((category) => (
-                    <Link
-                      key={category}
-                      href={`/shop?category=${encodeURIComponent(category)}`}
-                      className={`shrink-0 inline-flex items-center rounded-full px-4 py-2 text-body-sm font-medium transition-colors ${
-                        selectedCategory === category
-                          ? 'bg-(--color-link) text-(--color-cta-text)'
-                          : 'bg-(--color-surface-hover) text-(--color-text) hover:bg-(--color-link) hover:text-(--color-cta-text)'
-                      }`}
-                    >
-                      {category}
-                    </Link>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -190,7 +147,7 @@ export default async function ShopPage(props: {
                   <div className="mt-auto pt-2 min-h-11 flex items-end">
                     <Link
                       href={`/shop/${product.id}`}
-                      className="btn-secondary w-full justify-center text-body-sm font-semibold"
+                      className="btn-primary w-full justify-center text-body-sm font-semibold"
                     >
                       View details
                     </Link>

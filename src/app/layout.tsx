@@ -15,15 +15,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Lhesta Mall",
   description: "Home of all your lifetyle deals.",
-   icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
-    apple: "/icon.svg",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
 };
 
 import { CartSheet } from "@/components/cart-sheet";
 import { Header } from "@/components/header";
+import { MainNav } from "@/components/main-nav";
 import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
 import { createClient } from "@/utils/supabase/server";
@@ -45,6 +46,7 @@ export default async function RootLayout({
         <Providers initialUser={user}>
           <div className="flex flex-col min-h-screen">
             <Header />
+            <MainNav />
             <main className="flex-1">{children}</main>
             <Footer />
           </div>

@@ -14,10 +14,12 @@
  * 60% dominant (bg), 30% secondary (surfaces), 10% accent (header, links, CTAs). */
 
 :root {
-  /* Three-color palette – clean minimal */
-  --color-dominant: #f0f0f0;   /* 60% – slightly gray background */
-  --color-secondary: #ffffff; /* 30% – pure white cards/surfaces */
-  --color-accent: #171717;     /* 10% – soft black header, links, CTAs (Zara/Apple style) */
+  /* Three-color palette – clean minimal; blue/orange for LhestaMall reference */
+  --color-dominant: #f5f5f5;   /* 60% – light gray background */
+  --color-secondary: #ffffff;  /* 30% – white cards/surfaces */
+  --color-accent: #171717;     /* 10% – dark header/text */
+  --color-brand-blue: #2563eb; /* Nav bar, links */
+  --color-brand-orange: #ea580c; /* Hero, CTAs, accents */
 
   /* Mapped tokens */
   --color-bg: var(--color-dominant);
@@ -26,14 +28,19 @@
   --color-border: #e0e0e0;
   --color-text: #171717;
   --color-text-muted: #737373;
-  --color-link: var(--color-accent);
-  --color-link-hover: #404040;
-  --color-header-bg: var(--color-accent);
-  --color-header-text: #ffffff;
-  --color-cta-bg: var(--color-accent);
+  --color-link: var(--color-brand-blue);
+  --color-link-hover: #1d4ed8;
+  --color-header-bg: #ffffff;
+  --color-header-text: #171717;
+  --color-nav-bg: var(--color-brand-blue);
+  --color-nav-text: #ffffff;
+  --color-nav-hover: rgba(255, 255, 255, 0.15);
+  --color-cta-bg: var(--color-brand-orange);
   --color-cta-text: #ffffff;
+  --color-hero-accent: var(--color-brand-orange);
   --color-success: #0d9488;
   --color-warning: #b45309;
+  --color-whatsapp: #25d366;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -45,9 +52,9 @@
   --space-10: 2.5rem;
   --space-12: 3rem;
 
-  --radius-sm: 0.625rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.25rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
 
   --text-body: 1rem;
   --text-body-sm: 0.875rem;
@@ -64,6 +71,8 @@
     --color-dominant: #0f0f0f;
     --color-secondary: #171717;
     --color-accent: #fafafa;
+    --color-brand-blue: #3b82f6;
+    --color-brand-orange: #f97316;
 
     --color-bg: var(--color-dominant);
     --color-surface: var(--color-secondary);
@@ -71,14 +80,19 @@
     --color-border: #2a2a2a;
     --color-text: #fafafa;
     --color-text-muted: #a3a3a3;
-    --color-link: #a5b4fc;
-    --color-link-hover: #c7d2fe;
+    --color-link: #93c5fd;
+    --color-link-hover: #bfdbfe;
     --color-header-bg: var(--color-secondary);
     --color-header-text: var(--color-text);
-    --color-cta-bg: var(--color-accent);
+    --color-nav-bg: var(--color-brand-blue);
+    --color-nav-text: #ffffff;
+    --color-nav-hover: rgba(255, 255, 255, 0.15);
+    --color-cta-bg: var(--color-brand-orange);
     --color-cta-text: #0a0a0a;
+    --color-hero-accent: var(--color-brand-orange);
     --color-success: #2dd4bf;
     --color-warning: #fbbf24;
+    --color-whatsapp: #25d366;
   }
 }
 
@@ -131,6 +145,7 @@ body {
   color: var(--color-cta-text);
   background: var(--color-cta-bg);
   border: none;
+  border-width: 0;
   border-radius: var(--radius-md);
   transition: opacity 0.15s;
 }

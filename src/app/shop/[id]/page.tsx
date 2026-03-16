@@ -151,7 +151,7 @@ export default async function ProductPage(props: {
                                                     <div className="mt-auto pt-2">
                                                         <Link
                                                             href={`/shop/${p.id}`}
-                                                            className="btn-secondary w-full justify-center text-body-sm font-semibold"
+                                                            className="btn-primary w-full justify-center text-body-sm font-semibold"
                                                         >
                                                             View details
                                                         </Link>
