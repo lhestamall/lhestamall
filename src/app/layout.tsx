@@ -13,12 +13,37 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lhesta Mall",
-  description: "Home of all your lifetyle deals.",
+  metadataBase: new URL("https://lhestamall.com"),
+  title: "LhestaMall",
+  description: "Shop Smart. Import Better. Quality imports at better prices for Ghana from LhestaMall.",
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.png",
     apple: "/favicon.png",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://lhestamall.com",
+    siteName: "LhestaMall",
+    title: "LhestaMall | Shop Smart. Import Better.",
+    description: "Quality imports at better prices for Ghana. Reserve pre‑orders and shop trusted products at LhestaMall.",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 400,
+        alt: "LhestaMall – Shop Smart. Import Better.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LhestaMall | Shop Smart. Import Better.",
+    description: "Quality imports at better prices for Ghana from LhestaMall.",
+    images: ["/logo.png"],
+  },
+  alternates: {
+    canonical: "https://lhestamall.com",
   },
 };
 

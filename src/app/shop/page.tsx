@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { AddToWishlistButton } from '@/components/add-to-wishlist-button'
@@ -8,6 +9,20 @@ import { ShopFilters } from '@/components/shop-filters'
 import { getProductImageUrl } from '@/lib/product'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  // Browser tab title stays \"LhestaMall\" (from root layout); this is for SEO/snippets only.
+  description: 'Browse all products on LhestaMall – quality imports, pre-orders, and in-stock items at better prices for Ghana.',
+  openGraph: {
+    title: 'Shop All Products | LhestaMall',
+    description: 'Browse all products on LhestaMall – quality imports, pre-orders, and in-stock items at better prices for Ghana.',
+  },
+  twitter: {
+    title: 'Shop All Products | LhestaMall',
+    description: 'Browse all products on LhestaMall – quality imports, pre-orders, and in-stock items at better prices for Ghana.',
+    card: 'summary_large_image',
+  },
+}
 
 export default async function ShopPage(props: {
   searchParams: Promise<{ category?: string; q?: string; sort?: string; minPrice?: string; maxPrice?: string; availability?: string }>

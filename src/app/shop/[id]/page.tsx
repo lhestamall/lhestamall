@@ -1,3 +1,4 @@
+import type { Metadata, ResolvingMetadata } from 'next'
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -12,9 +13,63 @@ import { getProductImageUrl, getProductImageUrls } from '@/lib/product'
 
 export const dynamic = 'force-dynamic'
 
-export default async function ProductPage(props: {
+type ProductPageProps = {
     params: Promise<{ id: string }>
-}) {
+}
+
+export async function generateMetadata(
+    props: ProductPageProps,
+    _parent: ResolvingMetadata
+): Promise<Metadata> {
+    const params = await props.params
+    const idParam = params.id?.trim()
+    const id = idParam ? parseInt(idParam, 10) : NaN
+    if (!idParam || isNaN(id) || id < 1) {
+        return {}
+    }
+
+    const supabase = await createClient()
+    const { data: product } = await supabase
+        .from('products')
+        .select('name, description, category, image_url')
+        .eq('id', id)
+        .single()
+
+    if (!product) {
+        return {}
+    }
+
+    const seoTitle = `${product.name} | LhestaMall`
+    const description =
+        (product.description && String(product.description).slice(0, 150)) ||
+        `Shop ${product.name} in ${product.category || 'our collection'} on LhestaMall.`
+
+    const imageUrl = product.image_url ? getProductImageUrl(product as any) : '/logo.png'
+
+    return {
+        description,
+        openGraph: {
+            title: seoTitle,
+            description,
+            images: [
+                {
+                    url: imageUrl,
+                    width: 800,
+                    height: 800,
+                    alt: product.name,
+                },
+            ],
+        },
+        twitter: {
+            title: seoTitle,
+            description,
+            images: [imageUrl],
+            card: 'summary_large_image',
+        },
+    }
+}
+
+export default async function ProductPage(props: ProductPageProps) {
     const params = await props.params
     const idParam = params.id?.trim()
     const id = idParam ? parseInt(idParam, 10) : NaN
