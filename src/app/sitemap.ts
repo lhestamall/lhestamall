@@ -8,6 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: 'https://lhestamall.com/', changeFrequency: 'daily', priority: 1 },
     { url: 'https://lhestamall.com/shop', changeFrequency: 'daily', priority: 0.9 },
     { url: 'https://lhestamall.com/account', changeFrequency: 'monthly', priority: 0.4 },
+    { url: 'https://lhestamall.com/founder', changeFrequency: 'monthly', priority: 0.7 },
   ]
 
   try {
