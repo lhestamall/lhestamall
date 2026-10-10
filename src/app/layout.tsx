@@ -74,6 +74,14 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script async
+          id="google-adsense"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6365400422443304"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+         />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-(--color-bg) text-(--color-text)`}
         suppressHydrationWarning
@@ -91,12 +99,6 @@ export default async function RootLayout({
           </div>
           <CartSheet />
         </Providers>
-        <Script async
-          id="google-adsense"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6365400422443304"
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-         />
       </body>
     </html>
   );
