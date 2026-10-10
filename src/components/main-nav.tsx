@@ -19,11 +19,19 @@ export function MainNav() {
       })
   }, [])
 
-  const navLinks = [
+  const sorted = [...categories].sort((a, b) => a.localeCompare(b))
+  const MAX_CATEGORY_PILLS = 5
+  const topCategories = sorted.slice(0, MAX_CATEGORY_PILLS)
+  const moreCount = sorted.length - topCategories.length
+
+  const navLinks: { href: string; label: string }[] = [
     { href: '/', label: 'Home' },
     { href: '/shop', label: 'Shop' },
-    ...categories.map((cat) => ({ href: `/shop?category=${encodeURIComponent(cat)}`, label: cat })),
+    ...topCategories.map((cat) => ({ href: `/shop?category=${encodeURIComponent(cat)}`, label: cat })),
   ]
+  if (moreCount > 0) {
+    navLinks.push({ href: '/shop', label: `All categories (${sorted.length})` })
+  }
 
   return (
     <nav className="bg-(--color-nav-bg) text-(--color-nav-text) sticky top-12 sm:top-14 z-40">
@@ -31,7 +39,7 @@ export function MainNav() {
         <div className="flex items-center gap-1 py-2 min-w-max px-4 sm:px-6 lg:px-8">
           {navLinks.map(({ href, label }) => (
             <Link
-              key={href + label}
+              key={`${href}-${label}`}
               href={href}
               className="shrink-0 px-4 py-2.5 text-body-sm font-medium hover:bg-(--color-nav-hover) rounded-sm transition-colors whitespace-nowrap"
             >

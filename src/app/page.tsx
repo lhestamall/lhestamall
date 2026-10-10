@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ChevronRight, CreditCard, PiggyBank, Truck, Mail } from 'lucide-react'
 import { ProductImage } from '@/components/product-image'
 import { getProductImageUrl } from '@/lib/product'
@@ -9,6 +10,14 @@ import {
   getCategoryHeroesForCategories,
   type CategoryHero,
 } from '@/lib/home-groups-data'
+import { HeroGlobeBg } from '@/components/hero-globe-bg'
+import { HomeSpotlightCards } from '@/components/home-spotlight-cards'
+import {
+  getHomeInventoryStats,
+  mergeHomeGroupSections,
+  shouldMergeHomeSections,
+} from '@/lib/home-adaptive'
+import { getHomeSpotlightCards } from '@/lib/home-spotlights'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,6 +53,11 @@ function CategoryCard({ category, heroProduct }: CategoryHero) {
 export default async function Home() {
   const supabase = await createClient()
 
+  const [spotlightCards, inventory] = await Promise.all([
+    getHomeSpotlightCards(supabase),
+    getHomeInventoryStats(supabase),
+  ])
+
   const rawSections = await Promise.all(
     HOME_GROUPS.map(async (group) => {
       const categories = await getCategoriesForGroup(supabase, group)
@@ -52,7 +66,11 @@ export default async function Home() {
       return { group, heroes: visible }
     })
   )
-  const groupSections = rawSections.filter((s) => s.heroes.length > 0)
+  const nonEmpty = rawSections.filter((s) => s.heroes.length > 0)
+  const groupSections =
+    shouldMergeHomeSections(inventory.productCount, inventory.distinctCategories)
+      ? mergeHomeGroupSections(nonEmpty)
+      : nonEmpty
   const visibleGroupCount = groupSections.length
   const useTwoColGridOnMobile = visibleGroupCount <= 2
 
@@ -61,15 +79,15 @@ export default async function Home() {
       <main className="flex-1">
         {/* Hero: reference style – orange heading, Ghana subheading, CTA, right image */}
         <section className="relative bg-(--color-surface) overflow-hidden">
-          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Cpath fill=\'%23000\' d=\'M50 0L100 50 50 100 0 50z\'/%3E%3C/svg%3E")', backgroundSize: '120px' }} aria-hidden />
-          <div className="ds-container relative py-10 sm:py-14 lg:py-16">
+          <HeroGlobeBg />
+          <div className="ds-container relative z-10 py-10 sm:py-14 lg:py-16">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-(--color-hero-accent) leading-tight max-w-xl">
                   Shop Smart. Import Better.
                 </h1>
                 <p className="mt-3 sm:mt-4 text-body sm:text-title-sm text-(--color-text) max-w-md">
-                  Quality Imports at Better Prices for Ghana 🇬🇭
+                  Quality Imports at Better Prices for Ghana 
                 </p>
                 <Link
                   href="/shop"
@@ -78,48 +96,26 @@ export default async function Home() {
                   Explore Our Products
                 </Link>
               </div>
-              <div className="relative aspect-4/3 max-w-lg mx-auto lg:max-w-none rounded-xl overflow-hidden bg-(--color-surface-hover)">
-                <div className="absolute inset-0 flex items-center justify-center text-(--color-text-muted) text-body-sm">
-                  <span className="text-center px-4">Quality imports for your lifestyle</span>
-                </div>
+              <div className="relative aspect-4/3 max-w-sm sm:max-w-md lg:max-w-xl mx-auto hidden lg:flex items-center justify-center">
+                <Image
+                  src="/hero.png"
+                  alt="Happy customer holding space for LhestaMall products"
+                  width={640}
+                  height={480}
+                  className="object-contain h-full w-auto scale-110 sm:scale-125 lg:scale-150"
+                  priority
+                />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Trust cards: between hero and first section, floating on the line */}
-        <div className="relative z-10 -mt-10 sm:-mt-14 px-4 sm:px-6 lg:px-8">
-          <div className="ds-container">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-              <div className="bg-(--color-surface) rounded-xl p-5 sm:p-6 border border-(--color-border) shadow-lg">
-                <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-(--color-bg) text-(--color-link) mb-3">
-                  <CreditCard className="w-5 h-5" aria-hidden />
-                </div>
-                <h3 className="text-title-sm font-semibold text-(--color-text) mb-1.5">Secure Payments</h3>
-                <p className="text-body-sm text-(--color-text-muted)">Protected checkout and secure payment options for your peace of mind.</p>
-              </div>
-              <div className="bg-(--color-surface) rounded-xl p-5 sm:p-6 border border-(--color-border) shadow-lg">
-                <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-(--color-bg) text-(--color-link) mb-3">
-                  <PiggyBank className="w-5 h-5" aria-hidden />
-                </div>
-                <h3 className="text-title-sm font-semibold text-(--color-text) mb-1.5">Affordable Prices</h3>
-                <p className="text-body-sm text-(--color-text-muted)">Quality imports at better prices, tailored for Ghana.</p>
-              </div>
-              <div className="bg-(--color-surface) rounded-xl p-5 sm:p-6 border border-(--color-border) shadow-lg">
-                <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-(--color-bg) text-(--color-link) mb-3">
-                  <Truck className="w-5 h-5" aria-hidden />
-                </div>
-                <h3 className="text-title-sm font-semibold text-(--color-text) mb-1.5">Trusted Delivery</h3>
-                <p className="text-body-sm text-(--color-text-muted)">Reliable shipping and delivery so your orders arrive on time.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <HomeSpotlightCards cards={spotlightCards} />
 
-        {groupSections.map(({ group, heroes }, index) => (
+        {groupSections.map(({ group, heroes }) => (
             <section
               key={group.id}
-              className={`ds-container ${index === 0 ? 'pt-16 sm:pt-20' : ''} py-6 sm:py-10`}
+              className="ds-container py-8 sm:py-10"
             >
               <div className="flex items-end justify-between gap-4 mb-4 sm:mb-6">
                 <h2 className="text-section text-(--color-text)">{group.label}</h2>
@@ -165,6 +161,35 @@ export default async function Home() {
               )}
             </section>
         ))}
+
+        {/* Trust cards: below product sections */}
+        <section className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6">
+          <div className="ds-container">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+              <div className="bg-(--color-surface) rounded-xl p-5 sm:p-6 border border-(--color-border) shadow-lg">
+                <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-(--color-bg) text-(--color-link) mb-3">
+                  <CreditCard className="w-5 h-5" aria-hidden />
+                </div>
+                <h3 className="text-title-sm font-semibold text-(--color-text) mb-1.5">Secure Payments</h3>
+                <p className="text-body-sm text-(--color-text-muted)">Protected checkout and secure payment options for your peace of mind.</p>
+              </div>
+              <div className="bg-(--color-surface) rounded-xl p-5 sm:p-6 border border-(--color-border) shadow-lg">
+                <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-(--color-bg) text-(--color-link) mb-3">
+                  <PiggyBank className="w-5 h-5" aria-hidden />
+                </div>
+                <h3 className="text-title-sm font-semibold text-(--color-text) mb-1.5">Affordable Prices</h3>
+                <p className="text-body-sm text-(--color-text-muted)">Quality imports at better prices, tailored for Ghana.</p>
+              </div>
+              <div className="bg-(--color-surface) rounded-xl p-5 sm:p-6 border border-(--color-border) shadow-lg">
+                <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-(--color-bg) text-(--color-link) mb-3">
+                  <Truck className="w-5 h-5" aria-hidden />
+                </div>
+                <h3 className="text-title-sm font-semibold text-(--color-text) mb-1.5">Trusted Delivery</h3>
+                <p className="text-body-sm text-(--color-text-muted)">Reliable shipping and delivery so your orders arrive on time.</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <section className="ds-container py-6 sm:py-10">
           <div className="ds-card p-4 sm:p-6 max-w-xl">

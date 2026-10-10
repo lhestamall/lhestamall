@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script"
+import Script from "next/script";
+import { CartSheet } from "@/components/cart-sheet";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
+import { MainNav } from "@/components/main-nav";
+import { Providers } from "@/components/providers";
+import { SITE_DESCRIPTION } from "@/lib/site-seo";
+import { createClient } from "@/utils/supabase/server";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,7 +23,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://lhestamall.com"),
   title: "LhestaMall",
-  description: "Shop Smart. Import Better. Quality imports at better prices for Ghana from LhestaMall.",
+  description: SITE_DESCRIPTION,
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.png",
@@ -25,35 +32,28 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://lhestamall.com",
-    siteName: "LhestaMall",
-    title: "LhestaMall | Shop Smart. Import Better.",
-    description: "Quality imports at better prices for Ghana. Reserve pre‑orders and shop trusted products at LhestaMall.",
+    siteName: "Lhesta Mall",
+    title: "Lhesta Mall | Shop the latest trends online",
+    description: SITE_DESCRIPTION,
     images: [
       {
         url: "/logo.png",
         width: 800,
         height: 400,
-        alt: "LhestaMall – Shop Smart. Import Better.",
+        alt: "Lhesta Mall – shop curated goods delivered fast",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "LhestaMall | Shop Smart. Import Better.",
-    description: "Quality imports at better prices for Ghana from LhestaMall.",
+    title: "Lhesta Mall | Shop the latest trends online",
+    description: SITE_DESCRIPTION,
     images: ["/logo.png"],
   },
   alternates: {
     canonical: "https://lhestamall.com",
   },
 };
-
-import { CartSheet } from "@/components/cart-sheet";
-import { Header } from "@/components/header";
-import { MainNav } from "@/components/main-nav";
-import { Footer } from "@/components/footer";
-import { Providers } from "@/components/providers";
-import { createClient } from "@/utils/supabase/server";
 
 export default async function RootLayout({
   children,
@@ -63,12 +63,25 @@ export default async function RootLayout({
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Lhesta Mall",
+    alternateName: ["LhestaMall", "lhestamall.com"],
+    url: "https://lhestamall.com",
+    description: SITE_DESCRIPTION,
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-(--color-bg) text-(--color-text)`}
         suppressHydrationWarning
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <Providers initialUser={user}>
           <div className="flex flex-col min-h-screen">
             <Header />

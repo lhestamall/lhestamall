@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Logo } from './logo'
+import { SITE_DESCRIPTION_FOOTER_SHORT } from '@/lib/site-seo'
 
 const WHATSAPP_NUMBER = '233536193844'
 const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}`
@@ -17,9 +18,9 @@ export function Footer() {
             <Link href="/" className="w-fit text-(--color-text) hover:opacity-80 transition-opacity" aria-label="Lhesta Mall – Home">
               <Logo className="h-12 w-auto sm:h-14" showTagline />
             </Link>
-            <p className="text-body-sm text-(--color-text-muted) max-w-xs">
-              A curated selection of artisanal goods and high-quality essentials for the modern lifestyle.
-            </p>
+            <div data-nosnippet className="max-w-xs">
+              <p className="text-body-sm text-(--color-text-muted)">{SITE_DESCRIPTION_FOOTER_SHORT}</p>
+            </div>
           </div>
 
           {/* 2. Support */}
@@ -45,6 +46,7 @@ export function Footer() {
                 { href: '/shop', label: 'Categories' },
                 { href: '/shop', label: 'New Arrivals' },
                 { href: '/account/orders', label: 'Track Order' },
+                { href: '/founder', label: 'Meet the Founder' },
               ].map(({ href, label }) => (
                 <li key={label}>
                   <Link href={href} className="text-body-sm text-(--color-text-muted) hover:text-(--color-text) transition-colors">

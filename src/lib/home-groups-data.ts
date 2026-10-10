@@ -7,8 +7,8 @@ import {
 
 type SupabaseClient = Awaited<ReturnType<typeof import('@/utils/supabase/server').createClient>>
 
-/** Categories ordered by total quantity sold (for fallback when order data unavailable). */
-async function getFeaturedCategories(
+/** Categories ordered by total product count (for fallback / home spotlights). */
+export async function getFeaturedCategories(
   supabase: SupabaseClient,
   limit: number
 ): Promise<string[]> {

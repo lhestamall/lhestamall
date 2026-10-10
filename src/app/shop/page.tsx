@@ -7,19 +7,21 @@ import { Price } from '@/components/price'
 import { ProductRating } from '@/components/product-rating'
 import { ShopFilters } from '@/components/shop-filters'
 import { getProductImageUrl } from '@/lib/product'
+import { buildProductSearchOrFilter } from '@/lib/shop-search'
+import { SHOP_PAGE_DESCRIPTION } from '@/lib/site-seo'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   // Browser tab title stays \"LhestaMall\" (from root layout); this is for SEO/snippets only.
-  description: 'Browse all products on LhestaMall – quality imports, pre-orders, and in-stock items at better prices for Ghana.',
+  description: SHOP_PAGE_DESCRIPTION,
   openGraph: {
-    title: 'Shop All Products | LhestaMall',
-    description: 'Browse all products on LhestaMall – quality imports, pre-orders, and in-stock items at better prices for Ghana.',
+    title: 'Shop All Products | Lhesta Mall',
+    description: SHOP_PAGE_DESCRIPTION,
   },
   twitter: {
-    title: 'Shop All Products | LhestaMall',
-    description: 'Browse all products on LhestaMall – quality imports, pre-orders, and in-stock items at better prices for Ghana.',
+    title: 'Shop All Products | Lhesta Mall',
+    description: SHOP_PAGE_DESCRIPTION,
     card: 'summary_large_image',
   },
 }
@@ -56,17 +58,16 @@ export default async function ShopPage(props: {
   }
 
   if (selectedCategory) query = query.eq('category', selectedCategory)
-  if (queryParam) query = query.or(`name.ilike.%${queryParam}%,description.ilike.%${queryParam}%`)
+  if (queryParam) {
+    const searchOr = buildProductSearchOrFilter(queryParam)
+    if (searchOr) query = query.or(searchOr)
+  }
   if (minPrice) query = query.gte('price', Number(minPrice))
   if (maxPrice) query = query.lte('price', Number(maxPrice))
   if (availability === 'instock') query = query.eq('is_pre_order', false).gt('stock_quantity', 0)
   else if (availability === 'preorder') query = query.eq('is_pre_order', true)
 
   const { data: products, error } = await query
-
-  if (error) {
-    // Handle error gracefully if needed
-  }
 
   return (
     <div className="flex flex-col min-h-screen bg-(--color-bg) text-(--color-text)">
@@ -94,17 +95,26 @@ export default async function ShopPage(props: {
             <div className="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 min-w-0">
               <ShopFilters />
               <div className="hidden sm:flex shrink-0 items-center gap-1.5 h-10 px-3 text-body-sm font-medium text-(--color-text-muted) bg-(--color-surface) rounded-full">
-                <span>Available:</span>
+                <span>Showing</span>
                 <span className="text-(--color-text) font-semibold">{products?.length ?? 0}</span>
+                <span className="hidden md:inline">products</span>
               </div>
             </div>
             <p className="sm:hidden text-body-sm text-(--color-text-muted)">
-              Available: <span className="text-(--color-text) font-semibold">{products?.length ?? 0}</span>
+              <span className="text-(--color-text) font-semibold">{products?.length ?? 0}</span> products
             </p>
           </div>
-          <div className="columns-2 sm:columns-2 lg:columns-3 xl:columns-4 gap-2 sm:gap-4">
+          {error ? (
+            <div className="ds-card rounded-xl border border-(--color-border) bg-(--color-surface) px-4 py-6 text-center">
+              <p className="text-body-sm font-medium text-(--color-text)">Couldn&apos;t load products. Please refresh or try again shortly.</p>
+              {process.env.NODE_ENV === 'development' && (
+                <p className="text-label text-(--color-text-muted) mt-2 wrap-break-word">{error.message}</p>
+              )}
+            </div>
+          ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4">
           {!products || products.length === 0 ? (
-            <div className="col-span-full flex flex-col items-center justify-center py-10 sm:py-16 lg:py-24 px-6 text-center">
+            <div className="col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col items-center justify-center py-10 sm:py-16 lg:py-24 px-6 text-center">
               <div className="w-16 h-16 rounded-full bg-(--color-surface-hover) flex items-center justify-center mb-6">
                 <span className="text-2xl text-(--color-text-muted)" aria-hidden>?</span>
               </div>
@@ -124,7 +134,7 @@ export default async function ShopPage(props: {
             products.map((product) => (
               <article
                 key={product.id}
-                className="flex flex-col rounded-xl bg-(--color-surface) overflow-hidden break-inside-avoid mb-2 sm:mb-4 last:mb-0"
+                className="flex flex-col rounded-xl bg-(--color-surface) overflow-hidden"
               >
                 <Link
                   href={`/shop/${product.id}`}
@@ -152,12 +162,12 @@ export default async function ShopPage(props: {
                 </Link>
                 <div className="p-3 sm:p-4 flex flex-col flex-1 min-w-0 gap-1.5">
                   <span className="text-label font-light text-(--color-text-muted) wrap-break-word">{product.category || 'Collection'}</span>
-                  <Price amount={product.price} size="card" className="text-(--color-text)" />
                   <h3 className="text-body-sm font-bold leading-snug">
                     <Link href={`/shop/${product.id}`} className="text-(--color-text) hover:underline hover:text-(--color-text)">
                       {product.name}
                     </Link>
                   </h3>
+                  <Price amount={product.price} size="card" className="text-(--color-text)" />
                   <ProductRating rating={product.rating} ratingCount={product.rating_count} className="text-label font-light" />
                   <div className="mt-auto pt-2 min-h-11 flex items-end">
                     <Link
@@ -172,6 +182,7 @@ export default async function ShopPage(props: {
             ))
           )}
           </div>
+          )}
         </div>
         </div>
       </main>
