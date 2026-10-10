@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script"
 import "./globals.css";
 
 const geistSans = Geist({
@@ -77,6 +78,12 @@ export default async function RootLayout({
           </div>
           <CartSheet />
         </Providers>
+        <Script async
+          id="google-adsense"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6365400422443304"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+         />
       </body>
     </html>
   );
